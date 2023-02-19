@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/tunardev/go-api-boilerplate/interval/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -26,6 +27,12 @@ func main() {
 	
 	// Build web app
 	app := fiber.New()
+
+	// middlewares
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders:  "Origin, Content-Type, Accept",
+	}))
 	
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Go REST API starter kit")
