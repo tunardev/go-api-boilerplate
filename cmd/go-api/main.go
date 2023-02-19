@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/tunardev/go-api-boilerplate/interval/config"
 	"github.com/tunardev/go-api-boilerplate/interval/story"
+	"github.com/tunardev/go-api-boilerplate/interval/user"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -42,6 +43,7 @@ func main() {
 	
 	// initalize routes
 	story.Handler(app, db.Collection("stories"))
+	user.Handler(app, db.Collection("users"))
 
 	// Start server
 	app.Listen(fmt.Sprintf(":%v", cfg.Port))
