@@ -10,13 +10,13 @@ const (
 	Mongo_URI = "mongodb://localhost:27017"
 )
 
-// Config is the configuration for the interval service.
+// Config is the configuration for the app service.
 type Config struct {
 	Port int `json:"port"`
 	Mongo_URI string `json:"mongodb"`
 }
 
-// LoadConfig loads the configuration from the given file.
+// Load loads the configuration from the given file.
 func Load(file string) (*Config, error) {
 	c := Config{
 		Port: defaultPort,
