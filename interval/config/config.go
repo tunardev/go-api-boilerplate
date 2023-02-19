@@ -7,11 +7,13 @@ import (
 
 const (
 	defaultPort = 8080
+	Mongo_URI = "mongodb://localhost:27017"
 )
 
 // Config is the configuration for the interval service.
 type Config struct {
 	Port int `json:"port"`
+	Mongo_URI string `json:"mongodb"`
 }
 
 // LoadConfig loads the configuration from the given file.

@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/tunardev/go-api-boilerplate/interval/config"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
@@ -13,6 +16,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Connect to MongoDB
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(cfg.Mongo_URI))
+	if err != nil {
+		panic(err)
+	}
+	defer client.Disconnect(context.TODO()) // Close connection when main() exits
 	
 	// Build web app
 	app := fiber.New()
