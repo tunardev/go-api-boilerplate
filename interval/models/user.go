@@ -39,7 +39,7 @@ func (u User) ValidateRegister() error {
 
 func (u User) ValidateLogin() error {
 	passwordRegex := regexp.MustCompile(`/^\S+$/`)
-	if !passwordRegex.MatchString(u.Password) {
+	if passwordRegex.MatchString(u.Password) {
 		return errors.New("Password must be a nonempty string.")
 	}
 
