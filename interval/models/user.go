@@ -20,12 +20,12 @@ type User struct {
 // Validate validates the user.
 func (u User) ValidateRegister() error {
 	usernameRegex := regexp.MustCompile(`/^\w+$/i`)
-	if !usernameRegex.MatchString(u.Username) {
+	if usernameRegex.MatchString(u.Username) {
 		return errors.New("Username must be a nonempty alphanumeric string.")
 	}
 
 	passwordRegex := regexp.MustCompile(`/^\S+$/`)
-	if !passwordRegex.MatchString(u.Password) {
+	if passwordRegex.MatchString(u.Password) {
 		return errors.New("Password must be a nonempty string.")
 	}
 
