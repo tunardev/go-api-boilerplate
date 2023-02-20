@@ -1,6 +1,8 @@
 package story
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/tunardev/go-api-boilerplate/interval/models"
 	"github.com/tunardev/go-api-boilerplate/pkg/errors"
@@ -18,37 +20,37 @@ func (r routes) create(c *fiber.Ctx) error {
 	// Parse the request body into the story.
 	err := c.BodyParser(&story)
 	if err != nil {
-		return c.Status(400).JSON(errors.BadRequest(err.Error()))
+		return c.Status(http.StatusBadRequest).JSON(errors.BadRequest(err.Error()))
 	}
 
 	// Validate the story.
 	if ok := story.Validate(); !ok {
-		return c.Status(400).JSON(errors.BadRequest("invalid story"))
+		return c.Status(http.StatusBadRequest).JSON(errors.BadRequest("invalid story"))
 	}
 
 	// Get the user ID from the context.
 	userID := c.Locals("userID")
 	if userID == nil {
-		return c.Status(401).JSON(errors.Unauthorized(""))
+		return c.Status(http.StatusUnauthorized).JSON(errors.Unauthorized(""))
 	}
 
 	// Convert the user ID to an ObjectID.
 	objID, err := primitive.ObjectIDFromHex(userID.(string))
 	if err != nil {
-		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+		return c.Status(http.StatusInternalServerError).JSON(errors.InternalServerError(err.Error()))
 	}
 	story.UserID = objID
 
 	// Create the story in the database.
-	story, err = r.service.Create(story)
+	story, status, err := r.service.Create(story)
 	if err != nil {
-		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+		return c.Status(status).JSON(errors.InternalServerError(err.Error()))
 	}
 
 	// Return the story.
-	return c.Status(201).JSON(fiber.Map{
-		"story": story,
-		"status": 201,
+	return c.Status(status).JSON(fiber.Map{
+		"data": story,
+		"status": status,
 	})
 }
 
@@ -57,15 +59,15 @@ func (r routes) get(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	// Get the story from the database.
-	story, err := r.service.Get(id)
+	story, status, err := r.service.Get(id)
 	if err != nil {
-		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+		return c.Status(status).JSON(errors.InternalServerError(err.Error()))
 	}
 
 	// Return the story.
-	return c.Status(200).JSON(fiber.Map{
-		"story": story,
-		"status": 200,
+	return c.Status(status).JSON(fiber.Map{
+		"data": story,
+		"status": status,
 	})
 }
 
@@ -79,29 +81,29 @@ func (r routes) update(c *fiber.Ctx) error {
 	// Parse the request body into the story.
 	err := c.BodyParser(&story)
 	if err != nil {
-		return c.Status(400).JSON(errors.BadRequest(err.Error()))
+		return c.Status(http.StatusBadRequest).JSON(errors.BadRequest(err.Error()))
 	}
 
 	// Validate the story.
 	if ok := story.Validate(); !ok {
-		return c.Status(400).JSON(errors.BadRequest("invalid story"))
+		return c.Status(http.StatusBadRequest).JSON(errors.BadRequest("invalid story"))
 	}
 
 	// Get the user ID from the context.
 	userID := c.Locals("userID")
 	if userID == nil {
-		return c.Status(401).JSON(errors.Unauthorized(""))
+		return c.Status(http.StatusUnauthorized).JSON(errors.Unauthorized(""))
 	}
 
 	// Update the story in the database.
-	story, err = r.service.Update(id, story)
+	story, status, err := r.service.Update(id, story)
 	if err != nil {
-		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+		return c.Status(status).JSON(errors.InternalServerError(err.Error()))
 	}
 
 	// Return the story.
-	return c.Status(200).JSON(fiber.Map{
+	return c.Status(status).JSON(fiber.Map{
 		"data": story,
-		"status": 200,
+		"status": status,
 	})
 }

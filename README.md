@@ -1,6 +1,6 @@
-## Starter Code
+## 🌎 Starter Code
 
-This is a starter kit for a Go web application. It includes:
+🚀 This is a starter kit for a Go web application. It includes:
 
 - [x] Fiber is Fast, simple, and minimalist web framework for Go
 

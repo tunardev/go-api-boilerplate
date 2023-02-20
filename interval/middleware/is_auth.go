@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/tunardev/go-api-boilerplate/pkg/errors"
@@ -11,7 +13,7 @@ func IsAuth(store *session.Store) fiber.Handler {
 		// Get the session.
 		sess, err := store.Get(c)
 		if err != nil {
-			return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+			return c.Status(http.StatusInternalServerError).JSON(errors.InternalServerError(err.Error()))
 		}
 
 		// Get the user ID from the session.
@@ -23,6 +25,6 @@ func IsAuth(store *session.Store) fiber.Handler {
 		}
 
 		// Return unauthorized.
-		return c.Status(401).JSON(errors.Unauthorized(""))
+		return c.Status(http.StatusUnauthorized).JSON(errors.Unauthorized(""))
 	}
 }
