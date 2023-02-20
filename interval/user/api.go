@@ -40,6 +40,9 @@ func (r routes) register(c *fiber.Ctx) error {
 
 	// Set the user ID in the session.
 	sess.Set("userID", user.ID.Hex())
+	if err = sess.Save(); err != nil {
+		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+	}
 	
 	// Return the user.
 	return c.Status(201).JSON(fiber.Map{
@@ -76,6 +79,9 @@ func (r routes) login(c *fiber.Ctx) error {
 
 	// Set the user ID in the session.
 	sess.Set("userID", user.ID.Hex())
+	if err = sess.Save(); err != nil {
+		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+	}
 
 	// Return the user.
 	return c.Status(200).JSON(fiber.Map{

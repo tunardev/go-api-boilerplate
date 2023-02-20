@@ -42,7 +42,7 @@ func main() {
 		AllowOrigins: "*",
 		AllowHeaders:  "Origin, Content-Type, Accept",
 	}))
-	
+
 	// initalize routes
 	story.Handler(app, db.Collection("stories"), store)
 	user.Handler(app, db.Collection("users"), store)
