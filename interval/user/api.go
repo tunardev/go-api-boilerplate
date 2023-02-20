@@ -125,6 +125,9 @@ func (r routes) logout(c *fiber.Ctx) error {
 
 	// Delete the user ID from the session.
 	sess.Delete("userID")
+	if err = sess.Save(); err != nil {
+		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+	}
 
 	// Return the user.
 	return c.Status(200).JSON(fiber.Map{
