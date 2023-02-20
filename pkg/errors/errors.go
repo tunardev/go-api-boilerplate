@@ -42,3 +42,14 @@ func BadRequest(msg string) ErrorResponse {
 	}
 }
 
+// Unauthorized creates a new error response representing an unauthorized request (HTTP 401)
+func Unauthorized(msg string) ErrorResponse {
+	if msg == "" {
+		msg = "Unauthorized"
+	}
+
+	return ErrorResponse{
+		Status:  http.StatusUnauthorized,
+		Message: msg,
+	}
+}

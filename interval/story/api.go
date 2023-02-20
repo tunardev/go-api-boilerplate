@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/tunardev/go-api-boilerplate/interval/models"
 	"github.com/tunardev/go-api-boilerplate/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type routes struct {
@@ -24,6 +25,19 @@ func (r routes) create(c *fiber.Ctx) error {
 	if ok := story.Validate(); !ok {
 		return c.Status(400).JSON(errors.BadRequest("invalid story"))
 	}
+
+	// Get the user ID from the context.
+	userID := c.Locals("userID")
+	if userID == nil {
+		return c.Status(401).JSON(errors.Unauthorized(""))
+	}
+
+	// Convert the user ID to an ObjectID.
+	objID, err := primitive.ObjectIDFromHex(userID.(string))
+	if err != nil {
+		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+	}
+	story.UserID = objID
 
 	// Create the story in the database.
 	story, err = r.service.Create(story)
@@ -71,6 +85,12 @@ func (r routes) update(c *fiber.Ctx) error {
 	// Validate the story.
 	if ok := story.Validate(); !ok {
 		return c.Status(400).JSON(errors.BadRequest("invalid story"))
+	}
+
+	// Get the user ID from the context.
+	userID := c.Locals("userID")
+	if userID == nil {
+		return c.Status(401).JSON(errors.Unauthorized(""))
 	}
 
 	// Update the story in the database.

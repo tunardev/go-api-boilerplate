@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"regexp"
 	"time"
 
@@ -17,22 +18,35 @@ type User struct {
 }
 
 // Validate validates the user.
-func (u User) Validate() (string, bool) {
+func (u User) ValidateRegister() error {
 	usernameRegex := regexp.MustCompile(`/^\w+$/i`)
 	if !usernameRegex.MatchString(u.Username) {
-		return "Username must be a nonempty alphanumeric string.", false
+		return errors.New("Username must be a nonempty alphanumeric string.")
 	}
 
 	passwordRegex := regexp.MustCompile(`/^\S+$/`)
 	if !passwordRegex.MatchString(u.Password) {
-		return "Password must be a nonempty string.", false
+		return errors.New("Password must be a nonempty string.")
 	}
 
 	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
 	if !emailRegex.MatchString(u.Email) {
-		return "Email must be a valid email address.", false
+		return errors.New("Email must be a valid email address.")
 	}
 
-	return "", true
+	return nil
 }
 
+func (u User) ValidateLogin() error {
+	passwordRegex := regexp.MustCompile(`/^\S+$/`)
+	if !passwordRegex.MatchString(u.Password) {
+		return errors.New("Password must be a nonempty string.")
+	}
+
+	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+	if !emailRegex.MatchString(u.Email) {
+		return errors.New("Email must be a valid email address.")
+	}
+
+	return nil
+}

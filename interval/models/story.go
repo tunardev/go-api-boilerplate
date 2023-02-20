@@ -9,6 +9,7 @@ import (
 // Story is the record for a story.
 type Story struct {
 	ID   primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	UserID primitive.ObjectID `bson:"user_id,omitempty" json:"user_id,omitempty"`
 	Title string `bson:"title,omitempty" json:"title,omitempty"`
 	Text string `bson:"text,omitempty" json:"text,omitempty"`
 	CreatedAt time.Time `bson:"created_at,omitempty" json:"created_at,omitempty"`

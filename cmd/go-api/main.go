@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/tunardev/go-api-boilerplate/interval/config"
 	"github.com/tunardev/go-api-boilerplate/interval/story"
 	"github.com/tunardev/go-api-boilerplate/interval/user"
@@ -34,6 +35,7 @@ func main() {
 	
 	// Build web app
 	app := fiber.New()
+	store := session.New()
 
 	// initalize middlewares
 	app.Use(cors.New(cors.Config{
@@ -42,8 +44,8 @@ func main() {
 	}))
 	
 	// initalize routes
-	story.Handler(app, db.Collection("stories"))
-	user.Handler(app, db.Collection("users"))
+	story.Handler(app, db.Collection("stories"), store)
+	user.Handler(app, db.Collection("users"), store)
 
 	// Start server
 	app.Listen(fmt.Sprintf(":%v", cfg.Port))
