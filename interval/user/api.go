@@ -32,10 +32,11 @@ func (r routes) register(c *fiber.Ctx) error {
 		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
 	}
 
+	// Get the session.
 	sess, err := r.store.Get(c)
-    if err != nil {
-        return c.Status(500).JSON(errors.InternalServerError(err.Error()))
-    }
+	if err != nil {
+		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
+	}
 
 	// Set the user ID in the session.
 	sess.Set("userID", user.ID.Hex())
@@ -67,6 +68,7 @@ func (r routes) login(c *fiber.Ctx) error {
 		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
 	}
 
+	// Get the session.
 	sess, err := r.store.Get(c)
 	if err != nil {
 		return c.Status(500).JSON(errors.InternalServerError(err.Error()))
